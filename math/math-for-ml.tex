@@ -143,26 +143,139 @@ roundcorner=4pt}
 
 \pagebreak
 
+\section{Linear Algebra Basics}
+
+\begin{defn}
+  The \textbf{Spectrum} of a matrix is the set of it's eigenvalues. 
+\end{defn}
+
+\begin{defn}
+  A symmetric matrix $A$ is \textbf{Positive Semi-Definite} if for all vectors $\bm{z} \in \mb{R}^n$, we have $\bm{z}^TA\bm{z} \ge 0$ and \textbf{Positive Definite} if the inequality is strict.
+\end{defn}
+
+\begin{theorem}
+  The following are equivalent ($A$ is a symmetric matrix):
+  \begin{enumerate}
+    \item $A$ is positive semidefinite
+    \item All the eigenvalues of $A$ are positive
+    \item There exists a matrix $B$ such that $B^TB = A$
+  \end{enumerate}
+\end{theorem}
+
+\begin{theorem}
+  The inverse of a positive semidefinite matrix is positive semidefinite, and the eigenvalues of the inverse are inverses of the eigenvalues (eigenvectors remaining the same).
+\end{theorem}
+
+\begin{proof}
+  if $A$ is PSD, then by spectral decomposition, $A = P^{-1}DP$. Therefore, $A^{-1} = P^{-1}D^{-1}P$, and $D^{-1}$ being a diagonal matrix will simply have the inverses of the eigenvalues along it's diagonal. Hence, the eigenvalues of inverse are inverses of eigenvalues, and $A^-1$ is PSD as it's eigenvalues are positive.
+\end{proof}
+
+\begin{defn}
+The \textbf{Singular Value Decomposition} of a $m \times n$ matrix $M$ is given by 
+\begin{align}
+M = U \Sigma V^T
+\end{align}
+where U is a $m \times m$ orthogonal matrix, $\Sigma$ is a $m \times n$ diagonal matrix, and $V$ is a $n \times n$ orthogonal matrix
+\end{defn}
+
+A good illustration of SVD is given at \href{https://en.wikipedia.org/wiki/Singular_value_decomposition}{Wikipedia}, with some nice gifs
+
 \section{Differential Forms}
 
 Most of these are taken from the \href{https://www.math.uwaterloo.ca/~hwolkowi/matrixcookbook.pdf}{Matrix Cookbook}. 
 
 \begin{align}
-\pdv{\mf{x}^T\mf{a}}{\mf{x}} &= \pdv{\mf{a}^T\mf{x}}{\mf{x}} = \mf{a} \\
-\pdv{\mf{a}^T\mf{Xb}}{\mf{X}} &= \mf{ab}^T
+  \pdv{\mf{x}^T\mf{a}}{\mf{x}} &= \pdv{\mf{a}^T\mf{x}}{\mf{x}} = \mf{a} \\
+  \pdv{\mf{a}^T\mf{Xb}}{\mf{X}} &= \mf{ab}^T
 \end{align}
 
 \section{Probability Basics}
 
+\subsection{Multivariate Basics}
+
+For a random vector $\mf{x}$,
+\begin{align}
+  \bm{\mu} &= E(\bm{x}) = [\int x_i f_i(x_i) dx]_i \\
+  \bm{\Sigma} &= E((\bm{x} - \bm{\mu})(\bm{x} - \bm{\mu})^T) \\
+  &= E(\bm{x}\bm{x}^T) - \bm{\mu\mu}^T
+  &= 
+\end{align}
+
+where $\bm{\mu}$ is the mean and $\bm{\Sigma}$ is the covariance matrix \nl
+
+\begin{theorem}
+  The covariance matrix is always positive semi-definite
+\end{theorem}
+\begin{proof}
+  For a matrix $A$ to be positive semi-definite, for every vector $\bm{z} \in \mb{R}^n$, $\bm{z}^T\bm{Az} \ge 0$
+
+  Substituting this into the covariance matrix, for every $\bm{z} \in \mb{R}^n$, we have
+  \begin{align*}
+    \bm{z}^T\bm{\Sigma z} &= \bm{z}^TE(\bm{xx}^T)\bm{z} - (\bm{z}^T\bm{\mu})^2 \\
+                          &= E(\bm{z}^T\bm{xx}^T\bm{z}) - (\bm{z}^T\bm{\mu})^2 \\
+                          &= E((\bm{z}^T\bm{x})^2) - (\bm{z}^T\bm{\mu})^2 \\
+                          &= \mathrm{Var}(\bm{z}^T\bm{x}) \\
+                          &\ge 0
+  \end{align*}
+\end{proof}
+
+\begin{defn}
+The \textbf{Mahalanobis Distance} of a point $\bm{x}$ from a probability density $Q$ on $\bm{R}^n$ is 
+\begin{align}
+d_m(\mf{x},Q) = \sqrt{(\mf{x}-\bm{\mu})^T \mf{\Sigma}^-1 (\mf{x}-\bm{\mu})}
+\end{align}
+\end{defn}
+
+The mahalanobis distance can be thought of as a generalization of the Z-score $\frac{x - \mu}{\sigma}$: it gives a measure of how many standard deviations away an observation is from the mean of the distribution for a multivariate distribution. 
+
 \subsection{Multivariate Gaussian Distribution}
 
 \begin{align}
-f(\mf{x}) &= \frac{1}{(2\pi)^{D/2}\mf{\Sigma}^{1/2}} \exp\left( \frac{1}{2}(\mf{x}-\bm{\mu})^T\mf{\Sigma}(\mf{x}-\bm{\mu})\right)
+  f(\mf{x}) &= \frac{1}{(2\pi)^{D/2}|\mf{\Sigma}|^{1/2}} \exp\left(-\frac{1}{2}(\mf{x}-\bm{\mu})^T\mf{\Sigma}^{-1}(\mf{x}-\bm{\mu})\right)
 \end{align}
+
+\begin{theorem}
+  The Multivariate Gaussian is the distribution with maximum entropy subject to having a specified mean and covariance
+\end{theorem}
 
 \subsection{Bayesian Probability}
 
 \section{Information Theory}
+
+\begin{defn}
+  The \textbf{Information} of an event is defined as the negative logarithm of the probability of that event
+  \begin{align}
+    I(x) = -log_b(P(x))
+  \end{align}
+\end{defn}
+
+The information of an event conveys how 'surprising' that event is. $I(x)$ describes the information of a single event, but $I(X)$ is a random variable. \nl
+
+Note that $b$ defines the units of information: if $b=2$, the units are called \textit{bits} or \textit{shannons}, if $b=10$ they're called \textit{hartleys} and if $b=e$ they're called \textit{nats}. \nl
+
+\begin{defn}
+  The \textbf{Entropy} of a random variable X is the expected information of X
+  \begin{align}
+    H(X) = E(I(X)) = E(-\log(X))
+  \end{align}
+\end{defn}
+
+These definitions apply simply to discrete variables, but can also be extended in a measure-theoretic sense (see \href{https://en.wikipedia.org/wiki/Entropy_(information_theory)#Measure_theory}{Wikipedia}) for continuous random variables. In a computational sense, if we need to compute entropy for a continuous RV, it's done by binning the RV to make a discrete RV and then performing computations on the discrete RV thus obtained. \nl
+
+\begin{defn}
+  The \textbf{Conditional Entropy} of one random variable with respect to another is defined as
+  \begin{align}
+    H(Y|X) &= H(H(Y|X=x)) = \sum_x p(x) H(Y|X=x) \\
+    &= - \sum_{x,y} p(x,y) \log\left( \frac{p(x,y)}{p(x)} \right) \nonumber
+  \end{align}
+\end{defn}
+
+\begin{defn}
+  The \textbf{Kullback-Leibler divergence} is a measure of how much information is needed to discriminate between two distributions (ie whether an observation comes from distribution A or distribution B)
+  \begin{align}
+    D_{kl}(A \parallel B) = \sum_x P(x) \log \left( \frac{P(x)}{Q(x)} \right)
+  \end{align}
+\end{defn}
 
 \section{Linear Regression}
 
